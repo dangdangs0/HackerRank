@@ -1,6 +1,10 @@
 select s.name
-from friends f inner join students s on f.id=s.id
-inner join packages p on p.id=s.id
-inner join packages fp on fp.id=f.friend_id
-where fp.salary>p.salary
-order by fp.salary;
+from (select students.id, name, salary
+     from students, packages
+     where students.id=packages.id) s,
+     (select friends.id,friend_id, salary
+     from friends, packages
+     where friend_id=packages.id) f
+where s.id=f.id
+and s.salary<f.salary
+order by f.salary;
